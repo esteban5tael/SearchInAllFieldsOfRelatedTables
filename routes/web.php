@@ -1,31 +1,28 @@
 <?php
 
+use App\Http\Controllers\_SiteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// Define routes
+Route::get('/', [_SiteController::class, 'index'])->name('index');
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+// Route to dashboard view, requires authentication and email verification
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Group of routes requiring authentication
 Route::middleware('auth')->group(function () {
+    // Profile editing route
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    // Profile updating route
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Profile deletion route
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// Include additional authentication routes from 'auth.php'
+require __DIR__ . '/auth.php';
